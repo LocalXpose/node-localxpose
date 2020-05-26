@@ -1,0 +1,57 @@
+{
+  "name": "localxpose",
+  "version": "0.0.1",
+  "description": "localxpose client",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha test/",
+    "test:all": "npm run lint && npm run test:cover",
+    "test:cover": "nyc --reporter=text-summary mocha test/",
+    "test:local": "cross-env NODE_ENV=dev mocha test/",
+    "lint": "./node_modules/.bin/eslint lib/*",
+    "postinstall": "node postinstall.js",
+    "postinstall:local": "cross-env NODE_ENV=dev node postinstall.js",
+    "postversion": "git push --follow-tags"
+  },
+  "keywords": [
+    "localxpose",
+    "tunnels",
+    "port-forwarding",
+    "reverse-proxy",
+    "localhost"
+  ],
+  "author": "xLab, Inc.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/localxpose/node-localxpose",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/localxpose/node-localxpose"
+  },
+  "bugs": {
+    "url": "https://github.com/localxpose/node-localxpose/issues"
+  },
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.4",
+    "axios": "^0.19.2",
+    "cli-progress": "^3.8.2",
+    "decompress-zip": "^0.2.2",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^9.0.0",
+    "google-protobuf": "^3.11.4",
+    "grpc": "^1.24.2",
+    "node-downloader-helper": "^1.0.12",
+    "process-exists": "^4.0.0",
+    "promisify-child-process": "^4.1.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "cross-env": "^7.0.2",
+    "eslint": "^7.1.0",
+    "mocha": "^7.1.2",
+    "mock-http-server": "^1.4.2",
+    "nyc": "^15.0.1",
+    "root-require": "^0.3.1",
+    "selfsigned": "^1.10.7"
+  }
+}

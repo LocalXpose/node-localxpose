@@ -1,0 +1,6 @@
+.idea
+yarn-*
+bin/
+test.js
+node_modules
+.nyc_output

@@ -1,0 +1,146 @@
+syntax = "proto3";
+package api;
+
+import "google/protobuf/empty.proto";
+
+
+message Error {
+    int32 code = 1;
+    string msg = 2;
+    string errors = 3;
+}
+
+//tunnels types
+enum Type {
+    http = 0;
+    tls = 1;
+    tcp = 2;
+    udp = 3;
+}
+
+//tunnels events
+enum TunnelEvent {
+    EVENT_ERROR = 0;
+    EVENT_RUNNING = 1;
+    EVENT_RECONNECTED = 2;
+    EVENT_RECONNECTING = 3;
+    EVENT_CLOSED = 4;
+    EVENT_MESSAGE = 5;
+}
+
+//regions
+enum Region {
+    us = 0;
+    eu = 1;
+    ap = 2;
+    au = 3;
+}
+
+
+//---------------------------------------------------- Auth Service ---------------------------------------------------
+message LoginRequest {
+    string accessToken = 1;
+}
+
+//expect this response
+message LoginResponse{
+    string email = 1;
+    string type = 2;
+    string nextBill = 3;
+    Error error = 4;
+}
+
+message LogoutResponse{
+    Error error = 1;
+}
+
+
+service Auth {
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+}
+
+
+
+//---------------------------------------------------- Tunnel Service ---------------------------------------------------
+message HlsTunnelObj{
+    string hostheader = 1; // if hostheader exists
+    bool isFileServer = 2; // is it a file server tunnel
+    string fileServerPath = 3; // fileserver path
+    bool isBasicAuth = 4; // is basic auth enabled
+    string basicAuth = 5; // username:pass
+    bool isTlsTerminated = 6;
+}
+
+message TupTunnelObj{
+    string hostname = 1;
+    string port = 2;
+}
+
+message TunnelObj{
+    string ticket = 1; // tunnel ticket
+    string to = 2;   // to which address the client want to forward this tunnel
+    string type = 3; // tunnel type
+    string addr = 4; // the assigned address for this tunnel
+    string region = 5; // region
+    float expire = 6; // 0 for infinity
+    oneof TunnelSpec{
+        HlsTunnelObj hlsTunnel = 7;
+        TupTunnelObj tupTunnel = 8;
+    }
+}
+
+//List Tunnels----------------------------
+message ListTunnelsResponse{
+    repeated TunnelObj tunnels = 1;
+    Error error = 2;
+}
+
+//Stop a Tunnel----------------------------
+message StopTunnelRequest{
+    string ticket = 1;
+}
+
+//Stop a Tunnel----------------------------
+message StopTunnelResponse{
+    Error error = 1;
+}
+
+
+//Http Tunnel----------------------------
+message HlsTunnelRequest {
+    Region region = 1;
+    string to = 2;
+    string subdomain = 3;
+    string reservedDomain = 4;
+    string hostheader = 5;
+    string basicAuth = 6;
+    string fileServer = 7;
+    string crt = 8;
+    string key = 9;
+    Type type = 10;
+}
+
+message TunnelResponse{
+   TunnelObj tunnel = 1;
+   TunnelEvent event = 2;
+   string msg = 3;
+   Error error = 4;
+}
+
+
+//Tcp Tunnel----------------------------
+message TupTunnelRequest {
+    Region region = 1;
+    string to = 2;
+    string reservedEndpoint = 3;
+    Type type = 4;
+    string port = 5;
+}
+
+
+ service Tunnel {
+    rpc HlsTunnel(HlsTunnelRequest) returns (stream TunnelResponse) {}
+    rpc TupTunnel(TupTunnelRequest) returns (stream TunnelResponse) {}
+    rpc ListTunnels(google.protobuf.Empty) returns (ListTunnelsResponse) {}
+    rpc StopTunnel(StopTunnelRequest) returns (StopTunnelResponse) {}
+}

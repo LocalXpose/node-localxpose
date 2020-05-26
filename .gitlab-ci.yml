@@ -1,0 +1,31 @@
+image: node:10
+stages:
+  - test
+  - deploy
+
+before_script:
+  - npm config set //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+  - npm install
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  stage: test
+  tags:
+    - linux
+  script:
+    - npm run postinstall
+    - npm run test:all
+  only:
+    - tags
+
+deploy:
+  stage: deploy
+  tags:
+    - linux
+  script:
+    - npm publish
+  only:
+    - tags
