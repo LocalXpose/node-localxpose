@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://localxpose.io">
-        <img src="https://i.imgur.com/lCj4zsf.png" width="400px"/>
+        <img src="https://svgshare.com/i/LhY.svg" width="400px"/>
     </a>
 </div>
 
