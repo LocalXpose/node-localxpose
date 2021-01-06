@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@grpc/proto-loader": "^0.5.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cli-progress": "^3.8.2",
     "decompress-zip": "^0.2.2",
     "fs": "^0.0.1-security",
